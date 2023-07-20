@@ -23,6 +23,4 @@ target_link_libraries(
 
 include(CTest)
 
-enable_testing()
-
 add_test(NAME tests COMMAND tests)
