@@ -3,8 +3,6 @@
 #include <array>
 #include <map>
 
-#include "array_pool.hpp"
-
 using std::size_t;
 
 template<typename T, size_t PreallocSize = 10>
