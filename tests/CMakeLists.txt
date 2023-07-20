@@ -1,22 +1,26 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(test)
+set(CMAKE_BUILD_TYPE Debug)
 
-enable_testing()
+project(tests)
 
-add_executable(test map_test.cpp)
+add_executable(tests map_test.cpp array_pool_test.cpp list_test.cpp)
 
-set_target_properties(test PROPERTIES
+set_target_properties(tests PROPERTIES
 	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED ON
 )
 
-target_include_directories(test
+target_include_directories(tests
 	PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/../src
 )
 
 target_link_libraries(
-	test
+        tests
 	GTest::gtest_main
 )
+
+enable_testing()
+
+add_test(tests, tests)
