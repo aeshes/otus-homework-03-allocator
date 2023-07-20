@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-project(tests)
+project(testing)
 
 add_executable(tests map_test.cpp array_pool_test.cpp list_test.cpp)
 
@@ -21,6 +21,8 @@ target_link_libraries(
 	GTest::gtest_main
 )
 
+include(CTest)
+
 enable_testing()
 
-add_test(tests, tests)
+add_test(NAME tests COMMAND tests)
