@@ -14,7 +14,7 @@ static unsigned int factorial(unsigned int n)
 template<typename Map>
 static void print_map(const Map& map)
 {
-	std::cout << (const auto& pair : map)
+	for (const auto& pair : map)
 	{
 		std::cout << pair.first << ' ' << pair.second << std::endl;
 	}
