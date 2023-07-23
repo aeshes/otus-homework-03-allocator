@@ -29,7 +29,7 @@ public:
     void push_front(const T& value)
     {
         typename Alloc::template rebind<node>::other alloc{allocator};
-        node* n = alloc.allocate(1);
+        node* n = std::allocator_traits<T>::allocate(alloc, 1);
         n->value = value;
         n->next = nullptr;
 
