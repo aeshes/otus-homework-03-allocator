@@ -2,7 +2,7 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "allocator.hpp"
+#include "short_allocator.hpp"
 
 
 static unsigned int factorial(unsigned int n)
@@ -20,7 +20,10 @@ static void print_map(const Map& map)
 	}
 }
 
-TEST(Allocator, MapWithStdAllocator)
+template<typename K, typename T, size_t size = 10 * alignof(T)>
+using smap = std::map<K, T, std::less<T>, short_allocator<T, size, alignof(T)>>;
+
+TEST(StdMap, StdAllocator)
 {
 	std::map<int, int> map;
 
@@ -32,9 +35,10 @@ TEST(Allocator, MapWithStdAllocator)
 	print_map(map);
 }
 
-TEST(Allocator, MapWithCustomAllocator)
+TEST(StdMap, CustomAllocator)
 {
-	std::map<int, int, std::less<int>, allocator<int>> map;
+    smap<int, int>::allocator_type::arena_type a;
+    smap<int, int> map;
 
 	for (auto i = 0; i <= 9; i++)
 	{

@@ -12,15 +12,23 @@ class list
     };
 
 public:
-    list(Alloc allocator = Alloc())
+    using allocator_type = Alloc;
+
+    list()
         : head(nullptr), tail(nullptr)
+    {
+
+    }
+
+    list(const allocator_type &a)
+        : head(nullptr), tail(nullptr), allocator(a)
     {
 
     }
 
     void push_front(const T& value)
     {
-        typename Alloc::template rebind<node>::other alloc;
+        typename Alloc::template rebind<node>::other alloc{allocator};
         node* n = alloc.allocate(1);
         n->value = value;
         n->next = nullptr;

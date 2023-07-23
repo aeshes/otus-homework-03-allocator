@@ -7,7 +7,6 @@ project(allocator VERSION ${PROJECT_VERSION})
 
 find_package(GTest)
 
-add_subdirectory(demo)
 add_subdirectory(tests)
 
 set(CPACK_GENERATOR DEB)
