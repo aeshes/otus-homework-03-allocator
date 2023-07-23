@@ -2,16 +2,6 @@
 #include <algorithm>
 #include <vector>
 
-template<typename T>
-std::istream& operator >> (std::istream& in, std::vector<T> v)
-{
-    std::for_each(v.begin(), v.end(), [&in](auto& elem) {
-        in >> elem;
-    });
-
-    return in;
-}
-
 int main(int argc, char **argv)
 {
     auto cars_per_minute = 0;

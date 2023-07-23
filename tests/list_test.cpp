@@ -1,6 +1,6 @@
 #include <cstdio>
-#include <gtest/gtest.h>
 #include <list>
+#include <gtest/gtest.h>
 
 #include "list.hpp"
 #include "short_allocator.hpp"

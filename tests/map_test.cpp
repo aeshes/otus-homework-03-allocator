@@ -21,7 +21,7 @@ static void print_map(const Map& map)
 }
 
 template<typename K, typename T, size_t size = 10 * alignof(T)>
-using smap = std::map<K, T, std::less<T>, short_allocator<T, size, alignof(T)>>;
+using smap = std::map<K, T, std::less<K>, short_allocator<T, size, alignof(T)>>;
 
 TEST(StdMap, StdAllocator)
 {
