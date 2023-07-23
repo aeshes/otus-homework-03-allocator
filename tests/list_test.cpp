@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "list.hpp"
-#include "short_allocator.hpp"
+#include "stack_allocator.hpp"
 
 static unsigned int factorial(unsigned int n)
 {
@@ -21,8 +21,8 @@ void print_list(const List &l)
     printf("\n");
 }
 
-template<typename T, size_t size = 10 * alignof(T)>
-using custom_list = list<T, short_allocator<T, size, alignof(T)>>;
+template<typename T, size_t size = 10>
+using custom_list = list<T, stack_allocator<T, size>>;
 
 TEST(CustomList, StandardAllocator)
 {
@@ -36,10 +36,13 @@ TEST(CustomList, StandardAllocator)
     print_list(l);
 }
 
+using allocator_type = stack_allocator<int, 10>;
+
 TEST(CustomList, CustomAllocator)
 {
-    custom_list<int>::allocator_type::arena_type a;
-    custom_list<int> l{a};
+    int buffer[0x1000];
+
+    custom_list<int> l{allocator_type(buffer)};
 
     for (int i = 0; i < 10; i++)
     {
