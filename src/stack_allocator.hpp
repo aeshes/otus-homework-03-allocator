@@ -1,6 +1,6 @@
 #include <memory>
 
-template<typename T, size_t N, typename Alloc = std::allocator<T>>
+template<typename T, size_t N = 10, typename Alloc = std::allocator<T>>
 class stack_allocator
 {
 public:
@@ -8,24 +8,29 @@ public:
     using pointer = typename std::allocator_traits<Alloc>::pointer;
     using const_pointer = typename std::allocator_traits<Alloc>::const_pointer;
     using const_void_pointer = typename std::allocator_traits<Alloc>::const_void_pointer;
-    using allocator_type = Alloc;
     using size_type = size_t;
 
-    explicit stack_allocator(const allocator_type& alloc = allocator_type())
-        : alloc(alloc), begin(nullptr), end(nullptr), stack_pointer(nullptr)
+    explicit stack_allocator()
+        : begin(nullptr), end(nullptr), stack_pointer(nullptr)
     {
 
     }
 
-    explicit stack_allocator(pointer buffer, const allocator_type& alloc = allocator_type())
-        : alloc(alloc), begin(buffer), end(buffer + N), stack_pointer(buffer)
+    explicit stack_allocator(pointer buffer)
+        : begin(buffer), end(buffer + N), stack_pointer(buffer)
+    {
+
+    }
+
+    stack_allocator(const stack_allocator& other)
+        : allocator(other.allocator), begin(other.begin), end(other.end), stack_pointer(other.stack_pointer)
     {
 
     }
 
     template<typename U>
-    stack_allocator(const stack_allocator<U, N, Alloc>& other)
-        : alloc(other.alloc), begin(other.begin), end(other.end), stack_pointer(other.stack_pointer)
+    stack_allocator(const stack_allocator<U, N>& other)
+        : allocator(other.allocator), begin(other.begin), end(other.end), stack_pointer(other.stack_pointer)
     {
 
     }
@@ -39,7 +44,7 @@ public:
             return result;
         }
 
-        return alloc.allocate(n, hint);
+        return allocator.allocate(n, hint);
     }
 
     void deallocate(pointer p, size_type n)
@@ -48,7 +53,6 @@ public:
         {
             stack_pointer -= n;
         }
-        else alloc.deallocate(p, n);
     }
 
     bool owns(const_pointer p)
@@ -64,24 +68,25 @@ public:
     template <class U>
     struct rebind
     {
-        using other = stack_allocator<U, N, allocator_type>;
+        using other = stack_allocator<U, N>;
     };
 
 private:
-    allocator_type alloc;
     pointer begin;
     pointer end;
     pointer stack_pointer;
+    Alloc allocator;
 };
 
-template <typename T1, std::size_t N, typename Allocator, typename T2>
-bool operator == (const stack_allocator<T1, N, Allocator>& lhs, const stack_allocator<T2, N, Allocator>& rhs) noexcept
+template <typename T1, std::size_t N, typename T2>
+bool operator == (const stack_allocator<T1, N>& lhs, const stack_allocator<T2, N>& rhs) noexcept
 {
     return lhs.buffer() == rhs.buffer();
 }
 
-template <typename T1, std::size_t N, typename Allocator, typename T2>
-bool operator != (const stack_allocator<T1, N, Allocator>& lhs,  const stack_allocator<T2, N, Allocator>& rhs) noexcept
+template <typename T1, std::size_t N, typename T2>
+bool operator != (const stack_allocator<T1, N>& lhs,  const stack_allocator<T2, N>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
+

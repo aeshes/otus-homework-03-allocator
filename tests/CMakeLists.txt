@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 project(testing)
 
-add_executable(tests vector_test.cpp map_test.cpp list_test.cpp)
+add_executable(tests vector_test.cpp list_test.cpp map_test.cpp)
 
 set_target_properties(tests PROPERTIES
 	CXX_STANDARD 14

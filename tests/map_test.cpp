@@ -32,7 +32,7 @@ TEST(StdMap, StdAllocator)
 	print_map(map);
 }
 
-using allocator_type = stack_allocator<int, 10>;
+using allocator_type = stack_allocator<std::map<int, int>::value_type, 10>;
 
 TEST(StdMap, CustomAllocator)
 {
