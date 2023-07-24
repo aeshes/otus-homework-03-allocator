@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "list.hpp"
-#include "short_allocator.hpp"
+#include "arena_allocator.hpp"
 
 static unsigned int factorial(unsigned int n)
 {
@@ -22,7 +22,7 @@ void print_list(const List &l)
 }
 
 template<typename T, size_t size = 10 * alignof(T)>
-using custom_list = list<T, short_allocator<T, size, alignof(T)>>;
+using custom_list = list<T, arena_allocator<T, size, alignof(T)>>;
 
 TEST(CustomList, StandardAllocator)
 {

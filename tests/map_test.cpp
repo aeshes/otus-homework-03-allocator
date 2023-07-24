@@ -2,7 +2,7 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "short_allocator.hpp"
+#include "arena_allocator.hpp"
 
 
 static unsigned int factorial(unsigned int n)
@@ -21,7 +21,7 @@ static void print_map(const Map& map)
 }
 
 template<typename K, typename T, size_t size = 10 * alignof(T)>
-using smap = std::map<K, T, std::less<K>, short_allocator<T, size, alignof(T)>>;
+using smap = std::map<K, T, std::less<K>, arena_allocator<T, size, alignof(T)>>;
 
 TEST(StdMap, StdAllocator)
 {

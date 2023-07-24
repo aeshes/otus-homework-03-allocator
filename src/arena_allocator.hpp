@@ -60,7 +60,7 @@ template<size_t N, size_t alignment>
 template<size_t ReqAlign>
 char *arena<N, alignment>::allocate(size_t n)
 {
-    //static_assert(ReqAlign <= alignment, "alignment is too small for this arena");
+    static_assert(ReqAlign <= alignment, "alignment is too small for this arena");
     assert(owns(ptr) && "short_allocator has outlived arena");
 
     auto const aligned_n = align_up(n);
@@ -94,7 +94,7 @@ void arena<N, alignment>::deallocate(char *p, size_t n) noexcept
 }
 
 template<class T, size_t N, size_t Align = alignof(max_align_t)>
-class short_allocator
+class arena_allocator
 {
 public:
     using value_type = T;
@@ -106,10 +106,10 @@ private:
     arena_type &a;
 
 public:
-    short_allocator(const short_allocator &) = default;
-    short_allocator &operator=(const short_allocator &) = delete;
+    arena_allocator(const arena_allocator &) = default;
+    arena_allocator &operator=(const arena_allocator &) = delete;
 
-    short_allocator(arena_type &a) noexcept : a(a)
+    arena_allocator(arena_type &a) noexcept : a(a)
     {
         static_assert(size % alignment == 0, "size N needs to be a multiple of alignment Align");
     }
@@ -125,7 +125,7 @@ public:
     }
 
     template<class U>
-    short_allocator(short_allocator<U, N, alignment> &a) noexcept : a(a.get_arena())
+    arena_allocator(arena_allocator<U, N, alignment> &a) noexcept : a(a.get_arena())
     {
 
     }
@@ -133,7 +133,7 @@ public:
     template<class U>
     struct rebind
     {
-        using other = short_allocator<U, N, alignment>;
+        using other = arena_allocator<U, N, alignment>;
     };
 
     T *allocate(size_t n)
@@ -148,19 +148,19 @@ public:
     }
 
     template <class U, size_t M, size_t A2>
-    bool equals(const short_allocator<U, M, A2> &rhs) const noexcept
+    bool equals(const arena_allocator<U, M, A2> &rhs) const noexcept
     {
         return N == M && Align == A2 && &a == &rhs.get_arena();
     }
 };
 
 template <class T, size_t N, size_t A1, class U, size_t M, size_t A2>
-bool operator==(const short_allocator<T, N, A1> &x,const short_allocator<U, M, A2> &y) noexcept
+bool operator==(const arena_allocator<T, N, A1> &x,const arena_allocator<U, M, A2> &y) noexcept
 {
     return x.equals(y);
 }
 
 template <class T, size_t N, size_t A1, class U, size_t M, size_t A2>
-bool operator!=(const short_allocator<T, N, A1> &x, const short_allocator<U, M, A2> &y) noexcept {
+bool operator!=(const arena_allocator<T, N, A1> &x, const arena_allocator<U, M, A2> &y) noexcept {
     return !(x == y);
 }
