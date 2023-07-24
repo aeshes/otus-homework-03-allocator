@@ -1,8 +1,8 @@
 #include <cstdio>
+#include <memory_resource>
 #include <gtest/gtest.h>
 
 #include "list.hpp"
-#include "polymorphic_allocator.hpp"
 
 static unsigned int factorial(unsigned int n)
 {
@@ -38,8 +38,7 @@ using custom_list = list<T, std::pmr::polymorphic_allocator<T>>;
 TEST(CustomList, CustomAllocator)
 {
     std::array<int, 10> buffer;
-    std::pmr::memory_resource* resource = std::pmr::new_delete_resource();
-    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size(), resource };
+    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size() };
 
     custom_list<int> l{ &pool };
 

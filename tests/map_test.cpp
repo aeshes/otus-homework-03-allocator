@@ -37,8 +37,7 @@ using smap = std::map<K, T, std::less<K>, std::pmr::polymorphic_allocator<T>>;
 TEST(StdMap, CustomAllocator)
 {
     std::array<int, 10> buffer;
-    std::pmr::memory_resource* resource = std::pmr::new_delete_resource();
-    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size(), resource };
+    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size() };
 
     smap<int, int> map{ &pool };
 

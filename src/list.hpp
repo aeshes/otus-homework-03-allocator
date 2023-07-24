@@ -12,7 +12,8 @@ class list
     };
 
 public:
-    using allocator_type = Alloc;
+    using value_type = typename std::allocator_traits<Alloc>::value_type;
+    using allocator_type = typename std::allocator_traits<Alloc>::allocator_type;
 
     list()
         : head(nullptr), tail(nullptr)
@@ -26,7 +27,7 @@ public:
 
     }
 
-    void push_front(const T& value)
+    void push_front(const value_type& value)
     {
         typename Alloc::template rebind<node>::other alloc;
         node* n = alloc.allocate(1);

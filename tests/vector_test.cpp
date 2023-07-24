@@ -16,8 +16,7 @@ using vector = std::vector<T, std::pmr::polymorphic_allocator<T>>;
 TEST(StdVector, PolymorphicAllocator)
 {
     std::array<int, 10> buffer;
-    std::pmr::memory_resource* resource = std::pmr::new_delete_resource();
-    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size(), resource };
+    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size() };
 
     vector<int> v { &pool };
 
