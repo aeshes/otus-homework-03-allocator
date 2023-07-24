@@ -1,8 +1,7 @@
 #include <iostream>
 #include <map>
+#include <memory_resource>
 #include <gtest/gtest.h>
-
-#include "short_allocator.hpp"
 
 
 static unsigned int factorial(unsigned int n)
@@ -20,10 +19,7 @@ static void print_map(const Map& map)
 	}
 }
 
-template<typename K, typename T, size_t size = 10 * alignof(T)>
-using smap = std::map<K, T, std::less<K>, short_allocator<T, size, alignof(T)>>;
-
-TEST(StdMap, StdAllocator)
+TEST(StdMap, DefaultAllocator)
 {
 	std::map<int, int> map;
 
@@ -35,10 +31,16 @@ TEST(StdMap, StdAllocator)
 	print_map(map);
 }
 
+template<typename K, typename T>
+using smap = std::map<K, T, std::less<K>, std::pmr::polymorphic_allocator<T>>;
+
 TEST(StdMap, CustomAllocator)
 {
-    smap<int, int>::allocator_type::arena_type a;
-    smap<int, int> map;
+    std::array<int, 10> buffer;
+    std::pmr::memory_resource* resource = std::pmr::new_delete_resource();
+    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size(), resource };
+
+    smap<int, int> map{ &pool };
 
 	for (auto i = 0; i <= 9; i++)
 	{

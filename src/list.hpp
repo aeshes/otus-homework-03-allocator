@@ -28,7 +28,7 @@ public:
 
     void push_front(const T& value)
     {
-        typename Alloc::template rebind<node>::other alloc{allocator};
+        typename Alloc::template rebind<node>::other alloc;
         node* n = alloc.allocate(1);
         n->value = value;
         n->next = nullptr;

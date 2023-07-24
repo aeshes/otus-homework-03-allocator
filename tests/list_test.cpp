@@ -1,9 +1,8 @@
 #include <cstdio>
-#include <list>
 #include <gtest/gtest.h>
 
 #include "list.hpp"
-#include "short_allocator.hpp"
+#include "polymorphic_allocator.hpp"
 
 static unsigned int factorial(unsigned int n)
 {
@@ -21,10 +20,7 @@ void print_list(const List &l)
     printf("\n");
 }
 
-template<typename T, size_t size = 10 * alignof(T)>
-using custom_list = list<T, short_allocator<T, size, alignof(T)>>;
-
-TEST(CustomList, StandardAllocator)
+TEST(CustomList, DefaultAllocator)
 {
     list<int> l;
 
@@ -36,10 +32,16 @@ TEST(CustomList, StandardAllocator)
     print_list(l);
 }
 
+template<typename T>
+using custom_list = list<T, std::pmr::polymorphic_allocator<T>>;
+
 TEST(CustomList, CustomAllocator)
 {
-    custom_list<int>::allocator_type::arena_type a;
-    custom_list<int> l{a};
+    std::array<int, 10> buffer;
+    std::pmr::memory_resource* resource = std::pmr::new_delete_resource();
+    std::pmr::monotonic_buffer_resource pool { buffer.data(), buffer.size(), resource };
+
+    custom_list<int> l{ &pool };
 
     for (int i = 0; i < 10; i++)
     {
