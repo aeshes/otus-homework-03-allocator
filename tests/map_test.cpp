@@ -33,17 +33,18 @@ TEST(StdMap, StdAllocator)
 }
 
 using allocator_type = stack_allocator<std::map<int, int>::value_type, 10>;
+using map = std::map<int, int, std::less<int>, allocator_type>;
 
 TEST(StdMap, CustomAllocator)
 {
-    int buffer[0x1000];
-
-    std::map<int, int, std::less<int>, allocator_type> map{allocator_type(buffer)};
+    map::value_type buffer[0x1000];
+    map::allocator_type alloc{buffer};
+    map m;
 
 	for (auto i = 0; i <= 9; i++)
 	{
-		map[i] = factorial(i);
+        m[i] = factorial(i);
 	}
 
-	print_map(map);
+    print_map(m);
 }

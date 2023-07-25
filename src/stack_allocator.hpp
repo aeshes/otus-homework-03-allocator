@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 
 template<typename T, size_t N = 10, typename Alloc = std::allocator<T>>
 class stack_allocator
@@ -13,13 +14,16 @@ public:
     explicit stack_allocator()
         : begin(nullptr), end(nullptr), stack_pointer(nullptr)
     {
-
+        std::cout << "default ctor" << std::endl;
     }
 
     explicit stack_allocator(pointer buffer)
         : begin(buffer), end(buffer + N), stack_pointer(buffer)
     {
-
+        std::cout << "pointer: " << std::hex << buffer << std::endl;
+        std::cout << "begin: " << std::hex << begin << std::endl;
+        std::cout << "end: " << std::hex << end << std::endl;
+        std::cout << "stack_pointer: " << std::hex << stack_pointer << std::endl;
     }
 
     stack_allocator(const stack_allocator& other)
@@ -37,6 +41,11 @@ public:
 
     pointer allocate(size_type n, const_void_pointer hint = const_void_pointer())
     {
+        std::cout << "distance: " << size_type(std::distance(stack_pointer, end)) << std::endl;
+        std::cout << "begin: " << std::hex << begin << std::endl;
+        std::cout << "end: " << std::hex << end << std::endl;
+        std::cout << "stack_pointer: " << std::hex << stack_pointer << std::endl;
+
         if (n <= size_type(std::distance(stack_pointer, end)))
         {
             pointer result = stack_pointer;
