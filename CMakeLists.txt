@@ -5,7 +5,7 @@ set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 
 project(allocator VERSION ${PROJECT_VERSION})
 
-find_package(GTest)
+find_package(GTest REQUIRED)
 
 add_subdirectory(tests)
 

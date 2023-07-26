@@ -13,9 +13,7 @@ using allocator_type = stack_allocator<int, 10>;
 
 TEST(StdVector, CustomAllocator)
 {
-    int buffer[0x1000];
-
-    std::vector<int, allocator_type> v{allocator_type(buffer)};
+    std::vector<int, allocator_type> v{allocator_type()};
 
     for (int i = 0; i < 10; i++)
     {

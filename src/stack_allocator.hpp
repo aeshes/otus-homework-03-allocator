@@ -38,6 +38,9 @@ public:
 
     pointer allocate(size_type n, const_void_pointer hint = const_void_pointer())
     {
+        if (begin == nullptr)
+            init();
+
         if (n <= size_type(std::distance(stack_pointer, end)))
         {
             pointer result = stack_pointer;
@@ -54,6 +57,18 @@ public:
         {
             stack_pointer -= n;
         }
+    }
+
+    template<typename U, typename... Args>
+    void construct(U *p, Args &&... args)
+    {
+        allocator.construct(p, std::forward<Args>(args)...);
+    }
+
+    template<typename U>
+    void destroy(U *p)
+    {
+        allocator.destroy(p);
     }
 
     bool owns(const_pointer p)
@@ -77,6 +92,13 @@ private:
     pointer end;
     pointer stack_pointer;
     Alloc allocator;
+
+    void init()
+    {
+        begin = reinterpret_cast<T *>(operator new (N * sizeof(T)));
+        end = begin + N;
+        stack_pointer = begin;
+    }
 };
 
 template <typename T1, std::size_t N, typename T2>

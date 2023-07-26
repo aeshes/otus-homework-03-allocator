@@ -42,7 +42,7 @@ TEST(CustomList, CustomAllocator)
 {
     int buffer[0x1000];
 
-    custom_list<int> l{allocator_type(buffer)};
+    custom_list<int> l{allocator_type()};
 
     for (int i = 0; i < 10; i++)
     {

@@ -15,8 +15,8 @@ template<typename Map>
 static void print_map(const Map& map)
 {
 	for (const auto& pair : map)
-	{
-		std::cout << pair.first << ' ' << pair.second << std::endl;
+    {
+        std::cout << std::dec << pair.first << ' ' << pair.second << std::endl;
 	}
 }
 
@@ -37,8 +37,8 @@ using map = std::map<int, int, std::less<int>, allocator_type>;
 
 TEST(StdMap, CustomAllocator)
 {
-    map::value_type buffer[0x1000];
-    map::allocator_type alloc{buffer};
+    //map::value_type buffer[0x1000];
+    map::allocator_type alloc{};
     map m;
 
 	for (auto i = 0; i <= 9; i++)
